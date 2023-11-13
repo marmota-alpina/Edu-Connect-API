@@ -5,6 +5,8 @@ from .extensions import api
 course_model = api.model("Course", {
     "id": fields.Integer,
     "name": fields.String,
+    "description": fields.String,
+    "course_load": fields.Integer
 })
 
 student_model = api.model("Student", {

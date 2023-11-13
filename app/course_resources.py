@@ -55,6 +55,31 @@ class CourseListAPI(Resource):
         return course, 201
 
 
+@course_ns.route("/<int:id>/students")
+@course_ns.param('id', 'The course identifier')
+@course_ns.response(200, 'Students enrolled in the course')
+@course_ns.response(404, COURSE_NOT_FOUND)
+class Students(Resource):
+    @course_ns.marshal_list_with(student_model)
+    def get(self, id):
+        """
+        Get a list of students enrolled in a course.
+
+        This endpoint returns a list of all students enrolled in a course.
+
+        Parameters:
+            - id (int): The unique identifier of the course.
+
+        Responses:
+            200 OK - List of students
+            404 Not Found - If the course with the given ID does not exist.
+        """
+        course = Course.query.get(id)
+        if not course:
+            course_ns.abort(404, message=COURSE_NOT_FOUND)
+        return course.students
+
+
 @course_ns.route("/<int:id>/enroll")
 @course_ns.param('id', 'The course identifier')
 @course_ns.response(201, 'Student enrolled successfully')
